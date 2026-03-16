@@ -2,10 +2,11 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Shield, LogOut } from "lucide-react";
+import { LogOut } from "lucide-react";
 import { Button } from "../ui/button";
 import { useLanguage } from "../../lib/LanguageContext";
 import { useAuth } from "../../lib/AuthContext";
+import Image from "next/image";
 
 export function Navbar() {
   const pathname = usePathname();
@@ -15,16 +16,13 @@ export function Navbar() {
   return (
     <header className="w-full py-4 px-6 md:px-12 bg-white dark:bg-slate-900 shadow-sm border-b border-slate-200 dark:border-slate-800 flex items-center justify-between sticky top-0 z-50">
       <Link href="/" className="flex items-center gap-2">
-        <div className="bg-blue-600 p-2 rounded-lg text-white">
-          <Shield className="w-6 h-6" />
+        <div className="rounded-lg">
+          <Image src="/images/phishshield-logo.png" alt="logo" width={48} height={48} />
         </div>
         <h1 className="text-xl font-bold text-slate-900 dark:text-white tracking-tight">PhishShield</h1>
       </Link>
       
       <nav className="hidden md:flex gap-6 items-center text-sm font-medium text-slate-600 dark:text-slate-300">
-        <Link href="/" className={`hover:text-blue-600 transition-colors ${pathname === '/' ? 'text-blue-600 font-semibold' : ''}`}>
-          {t.nav.scan}
-        </Link>
         {isAuthenticated && (
           <Link href="/dashboard" className={`hover:text-blue-600 transition-colors ${pathname === '/dashboard' ? 'text-blue-600 font-semibold' : ''}`}>
             {t.nav.dashboard}
