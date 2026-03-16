@@ -1,0 +1,50 @@
+{
+  "nav": {
+    "dashboard": "Dashboard",
+    "scan": "Scanner",
+    "login": "Login",
+    "register": "Register",
+    "logout": "Logout"
+  },
+  "hero": {
+    "title": "Advanced Phishing ",
+    "title_highlight": "Detection",
+    "subtitle": "Real-time, AI-powered URL analysis using a hybrid deterministic and Machine Learning approach. Enter a URL below to perform a deep scan."
+  },
+  "scanner": {
+    "placeholder": "https://example.com/login",
+    "scan_btn": "Scan URL",
+    "scanning": "Scanning..."
+  },
+  "result": {
+    "threat_risk": "Threat Risk",
+    "method": "Detection Method",
+    "xai_title": "AI Explainability Analysis",
+    "safe": "Safe",
+    "suspicious": "Suspicious",
+    "malicious": "Malicious",
+    "confidence": "Model Confidence:"
+  },
+  "auth": {
+    "welcome": "Welcome back",
+    "login_desc": "Enter your credentials to access your dashboard",
+    "email": "Email",
+    "password": "Password",
+    "signin": "Sign In",
+    "no_account": "Don't have an account?",
+    "signup": "Sign up",
+    "create": "Create an account",
+    "create_desc": "Enter your details to create a new account",
+    "name": "Full Name",
+    "have_account": "Already have an account?"
+  },
+  "dashboard": {
+    "title": "Analytics Dashboard",
+    "subtitle": "Overview of your scanning activity and model performance.",
+    "total_scans": "Total Scans",
+    "phishing_detected": "Phishing Detected",
+    "safe_urls": "Safe URLs",
+    "model_a": "Model A Scans",
+    "model_b": "Model B Scans"
+  }
+}
