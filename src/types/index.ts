@@ -19,9 +19,10 @@ export interface ScanRequest {
 }
 
 export interface User {
-  id: string;
+  id: number;
   email: string;
   name: string;
+  role: string;
 }
 
 export interface AuthState {

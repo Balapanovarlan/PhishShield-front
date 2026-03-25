@@ -8,6 +8,8 @@ import { Input } from "@/components/ui/input";
 import { Shield, Mail, Lock, User as UserIcon } from "lucide-react";
 import Link from "next/link";
 import { motion } from "framer-motion";
+import api from "@/lib/api";
+import axios from "axios";
 
 interface AuthFormProps {
   mode: "login" | "register";
@@ -17,22 +19,46 @@ export function AuthForm({ mode }: AuthFormProps) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const { login } = useAuth();
   const { t } = useLanguage();
 
   const isRegister = mode === "register";
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || !password) return;
     if (isRegister && !name) return;
 
-    const user = {
-      id: isRegister ? Date.now().toString() : "1",
-      name: isRegister ? name : "Admin User",
-      email,
-    };
-    login(user, "mock-jwt-token-12345");
+    setError("");
+    setLoading(true);
+
+    try {
+      const endpoint = isRegister ? "/auth/register" : "/auth/login";
+      const payload = isRegister
+        ? { name, email, password }
+        : { email, password };
+
+      const res = await api.post(endpoint, payload);
+      login(res.data.user, res.data.token);
+    } catch (err) {
+      if (axios.isAxiosError(err)) {
+        const detail = err.response?.data?.detail;
+        if (typeof detail === "string") {
+          setError(detail);
+        } else if (Array.isArray(detail)) {
+          // Pydantic 422 validation errors — extract messages
+          setError(detail.map((e: { msg: string }) => e.msg).join(", "));
+        } else {
+          setError("An error occurred");
+        }
+      } else {
+        setError("An unexpected error occurred");
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -52,6 +78,12 @@ export function AuthForm({ mode }: AuthFormProps) {
               {t(isRegister ? "auth.create_desc" : "auth.login_desc")}
             </p>
           </div>
+
+          {error && (
+            <div className="bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 text-sm px-4 py-3 rounded-lg border border-red-200 dark:border-red-800">
+              {error}
+            </div>
+          )}
 
           <form onSubmit={handleSubmit} className="space-y-6 mt-8">
             <div className="space-y-4">
@@ -92,8 +124,19 @@ export function AuthForm({ mode }: AuthFormProps) {
               </div>
             </div>
 
-            <Button type="submit" className="w-full h-12 bg-blue-600 hover:bg-blue-700 text-white font-medium shadow-md transition-all active:scale-95">
-              {t(isRegister ? "auth.signup" : "auth.signin")}
+            <Button
+              type="submit"
+              disabled={loading}
+              className="w-full h-12 bg-blue-600 hover:bg-blue-700 text-white font-medium shadow-md transition-all active:scale-95"
+            >
+              {loading ? (
+                <span className="flex items-center gap-2">
+                  <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  {t(isRegister ? "auth.signup" : "auth.signin")}
+                </span>
+              ) : (
+                t(isRegister ? "auth.signup" : "auth.signin")
+              )}
             </Button>
 
             <p className="text-center text-sm text-slate-600 dark:text-slate-400 mt-6">

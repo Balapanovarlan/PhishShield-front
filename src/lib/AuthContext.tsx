@@ -1,8 +1,9 @@
 "use client";
 
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useState, useEffect, useCallback } from "react";
 import { User, AuthState } from "../types";
 import { useRouter } from "next/navigation";
+import api from "./api";
 
 interface AuthContextType extends AuthState {
   login: (user: User, token: string) => void;
@@ -25,22 +26,38 @@ function getInitialAuthState(): AuthState {
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [authState, setAuthState] = useState<AuthState>(getInitialAuthState);
-
   const router = useRouter();
 
-  const login = (user: User, token: string) => {
-    localStorage.setItem("token", token);
-    localStorage.setItem("user", JSON.stringify(user));
-    setAuthState({ isAuthenticated: true, user, token });
-    router.push("/dashboard");
-  };
-
-  const logout = () => {
+  const logout = useCallback(() => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     setAuthState({ isAuthenticated: false, user: null, token: null });
     router.push("/login");
-  };
+  }, [router]);
+
+  const login = useCallback((user: User, token: string) => {
+    localStorage.setItem("token", token);
+    localStorage.setItem("user", JSON.stringify(user));
+    setAuthState({ isAuthenticated: true, user, token });
+    router.push("/dashboard");
+  }, [router]);
+
+  // Validate token on mount by calling GET /auth/me
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) return;
+
+    api.get("/auth/me")
+      .then((res) => {
+        const user = res.data as User;
+        localStorage.setItem("user", JSON.stringify(user));
+        setAuthState({ isAuthenticated: true, user, token });
+      })
+      .catch(() => {
+        // Token is invalid or expired — clear everything
+        logout();
+      });
+  }, [logout]);
 
   return (
     <AuthContext.Provider value={{ ...authState, login, logout }}>

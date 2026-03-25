@@ -12,7 +12,7 @@ import Image from "next/image";
 export function Navbar() {
   const pathname = usePathname();
   const { t } = useLanguage();
-  const { isAuthenticated, logout } = useAuth();
+  const { isAuthenticated, user, logout } = useAuth();
 
   return (
     <header className="w-full py-4 px-6 md:px-12 bg-white dark:bg-slate-900 shadow-sm border-b border-slate-200 dark:border-slate-800 flex items-center justify-between sticky top-0 z-50">
@@ -24,10 +24,18 @@ export function Navbar() {
       </Link>
       
       <nav className="hidden md:flex gap-6 items-center text-sm font-medium text-slate-600 dark:text-slate-300">
-        {isAuthenticated && (
-          <Link href="/dashboard" className={`hover:text-blue-600 transition-colors ${pathname === '/dashboard' ? 'text-blue-600 font-semibold' : ''}`}>
-            {t('nav.dashboard')}
-          </Link>
+        {isAuthenticated && user?.role === "admin" && (
+          <>
+            <Link href="/dashboard" className={`hover:text-blue-600 transition-colors ${pathname === '/dashboard' ? 'text-blue-600 font-semibold' : ''}`}>
+              {t('nav.dashboard')}
+            </Link>
+            <Link href="/admin/blacklist" className={`hover:text-blue-600 transition-colors ${pathname === '/admin/blacklist' ? 'text-blue-600 font-semibold' : ''}`}>
+              {t('admin.blacklist')}
+            </Link>
+            <Link href="/admin/users" className={`hover:text-blue-600 transition-colors ${pathname === '/admin/users' ? 'text-blue-600 font-semibold' : ''}`}>
+              {t('admin.users')}
+            </Link>
+          </>
         )}
         
         {/* Language Picker */}

@@ -1,6 +1,5 @@
-import axios, { AxiosInstance, InternalAxiosRequestConfig, AxiosResponse } from 'axios';
+import axios, { AxiosInstance, InternalAxiosRequestConfig, AxiosResponse, AxiosError } from 'axios';
 
-// Base API URL for FastAPI backend
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000';
 
 const api: AxiosInstance = axios.create({
@@ -10,7 +9,7 @@ const api: AxiosInstance = axios.create({
   },
 });
 
-// Request interceptor (e.g., adding Auth token if needed later)
+// Request interceptor — attach Bearer token
 api.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
     if (typeof window !== "undefined") {
@@ -21,19 +20,24 @@ api.interceptors.request.use(
     }
     return config;
   },
-  (error: unknown) => {
-    return Promise.reject(error);
-  }
+  (error: unknown) => Promise.reject(error),
 );
 
-// Response interceptor for error handling
+// Response interceptor — auto-logout on 401
 api.interceptors.response.use(
   (response: AxiosResponse) => response,
-  (error: unknown) => {
-    // Here we can handle global errors, like 401 Unauthorized
-    console.error('API Error:', error);
+  (error: AxiosError) => {
+    if (error.response?.status === 401 && typeof window !== "undefined") {
+      // Don't redirect if we're already on auth pages or if this is a login/register request
+      const url = error.config?.url || "";
+      if (!url.includes("/auth/")) {
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+        window.location.href = "/login";
+      }
+    }
     return Promise.reject(error);
-  }
+  },
 );
 
 export default api;
