@@ -7,19 +7,7 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContaine
 import { Shield, AlertTriangle, Activity, Database } from "lucide-react";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-
-// Mock Data for Diploma Demonstration
-const statsData = [
-  { name: 'Model A (Content)', scans: 4520, format: 'blue' },
-  { name: 'Model B (URL)', scans: 2180, format: 'emerald' },
-];
-
-const pieData = [
-  { name: 'Phishing', value: 18995 },
-  { name: 'Legitimate', value: 36837 },
-];
-
-const COLORS = ['#ef4444', '#10b981'];
+import { MODEL_STATS, DATASET_DISTRIBUTION, CHART_COLORS } from "@/constants/dashboard";
 
 export default function Dashboard() {
   const { t } = useLanguage();
@@ -36,14 +24,11 @@ export default function Dashboard() {
 
   return (
     <div className="w-full max-w-7xl mx-auto px-4 md:px-8 py-8 space-y-8">
-
-      {/* Header */}
       <div>
         <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-2">{t("dashboard.title")}</h2>
         <p className="text-slate-500 dark:text-slate-400">{t("dashboard.subtitle")} Welcome, {user?.name}.</p>
       </div>
 
-      {/* Top Stat Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <Card className="shadow-sm">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
@@ -77,10 +62,7 @@ export default function Dashboard() {
         </Card>
       </div>
 
-      {/* Charts Section */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-
-        {/* Bar Chart: Model Performance */}
         <Card className="shadow-sm border-slate-200 dark:border-slate-800">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-lg">
@@ -90,18 +72,17 @@ export default function Dashboard() {
           </CardHeader>
           <CardContent className="h-[300px]">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={statsData} margin={{ top: 20, right: 30, left: 0, bottom: 5 }}>
+              <BarChart data={MODEL_STATS} margin={{ top: 20, right: 30, left: 0, bottom: 5 }}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
                 <XAxis dataKey="name" axisLine={false} tickLine={false} />
                 <YAxis axisLine={false} tickLine={false} />
-                <Tooltip cursor={{ fill: 'transparent' }} />
+                <Tooltip cursor={{ fill: "transparent" }} />
                 <Bar dataKey="scans" fill="#3b82f6" radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </CardContent>
         </Card>
 
-        {/* Pie Chart: Dataset Distribution */}
         <Card className="shadow-sm border-slate-200 dark:border-slate-800">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-lg">
@@ -113,7 +94,7 @@ export default function Dashboard() {
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie
-                  data={pieData}
+                  data={DATASET_DISTRIBUTION}
                   cx="50%"
                   cy="50%"
                   innerRadius={70}
@@ -122,19 +103,18 @@ export default function Dashboard() {
                   dataKey="value"
                   stroke="none"
                 >
-                  {pieData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                  {DATASET_DISTRIBUTION.map((_entry, index) => (
+                    <Cell key={`cell-${index}`} fill={CHART_COLORS[index % CHART_COLORS.length]} />
                   ))}
                 </Pie>
                 <Tooltip />
               </PieChart>
             </ResponsiveContainer>
 
-            {/* Custom Legend */}
             <div className="absolute right-8 top-24 space-y-3">
-              {pieData.map((entry, idx) => (
+              {DATASET_DISTRIBUTION.map((entry, idx) => (
                 <div key={idx} className="flex items-center gap-2">
-                  <div className="w-3 h-3 rounded-full" style={{ backgroundColor: COLORS[idx] }} />
+                  <div className="w-3 h-3 rounded-full" style={{ backgroundColor: CHART_COLORS[idx] }} />
                   <span className="text-sm font-medium text-slate-600 dark:text-slate-300">{entry.name}</span>
                   <span className="text-sm text-slate-400">({entry.value})</span>
                 </div>
@@ -142,7 +122,6 @@ export default function Dashboard() {
             </div>
           </CardContent>
         </Card>
-
       </div>
     </div>
   );

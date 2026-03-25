@@ -13,8 +13,12 @@ const api: AxiosInstance = axios.create({
 // Request interceptor (e.g., adding Auth token if needed later)
 api.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
-    // Auth token can go here later
-    // const token = localStorage.getItem('token');
+    if (typeof window !== "undefined") {
+      const token = localStorage.getItem("token");
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
+    }
     return config;
   },
   (error: unknown) => {

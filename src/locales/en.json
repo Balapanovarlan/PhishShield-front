@@ -41,7 +41,9 @@
     "create": "Create an account",
     "create_desc": "Enter your details to create a new account",
     "name": "Full Name",
-    "have_account": "Already have an account?"
+    "have_account": "Already have an account?",
+    "shield_title": "PhishShield Intelligence",
+    "shield_desc": "Powered by advanced Machine Learning algorithms, PhishShield protects your digital perimeter with real-time analysis and zero-day threat detection."
   },
   "dashboard": {
     "title": "Analytics Dashboard",

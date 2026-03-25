@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, { createContext, useContext, useState } from "react";
 import { User, AuthState } from "../types";
 import { useRouter } from "next/navigation";
 
@@ -11,26 +11,22 @@ interface AuthContextType extends AuthState {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const [authState, setAuthState] = useState<AuthState>({
-    isAuthenticated: false,
-    user: null,
-    token: null,
-  });
-  
-  const router = useRouter();
+function getInitialAuthState(): AuthState {
+  if (typeof window === "undefined") {
+    return { isAuthenticated: false, user: null, token: null };
+  }
+  const token = localStorage.getItem("token");
+  const user = localStorage.getItem("user");
+  if (token && user) {
+    return { isAuthenticated: true, user: JSON.parse(user), token };
+  }
+  return { isAuthenticated: false, user: null, token: null };
+}
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    const user = localStorage.getItem("user");
-    if (token && user) {
-      setAuthState({
-        isAuthenticated: true,
-        user: JSON.parse(user),
-        token,
-      });
-    }
-  }, []);
+export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
+  const [authState, setAuthState] = useState<AuthState>(getInitialAuthState);
+
+  const router = useRouter();
 
   const login = (user: User, token: string) => {
     localStorage.setItem("token", token);
