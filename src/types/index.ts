@@ -5,6 +5,12 @@ export interface ScanResult {
   confidence: number;
   details: string;
   explanations?: string[];
+  breakdown?: {
+    html: number;
+    url: number;
+    reputation: number;
+    protocol: number;
+  };
   error?: string;
 }
 
@@ -24,4 +30,4 @@ export interface AuthState {
   token: string | null;
 }
 
-export type Language = "en" | "ru";
+export type Language = "en" | "ru" | "kz";

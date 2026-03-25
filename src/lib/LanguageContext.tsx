@@ -1,51 +1,47 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect } from "react";
-import en from "../locales/en.json";
-import ru from "../locales/ru.json";
+import React, { createContext, useContext, useCallback, useEffect } from "react";
+import { useTranslation } from "react-i18next";
+import "./i18n";
 import api from "./api";
 
-type Language = "en" | "ru";
-type Dictionary = typeof en;
+type Language = "en" | "ru" | "kz";
 
 interface LanguageContextType {
   lang: Language;
-  t: Dictionary;
+  t: (key: string) => string;
   setLang: (lang: Language) => void;
 }
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
-const dictionaries = {
-  en,
-  ru,
-};
-
 export const LanguageProvider = ({ children }: { children: React.ReactNode }) => {
-  const [lang, setLangState] = useState<Language>("en");
+  const { t, i18n } = useTranslation();
 
-  // Load language from storage on mount
+  const lang = (i18n.language || "ru") as Language;
+
+  // Load saved language from localStorage on mount
   useEffect(() => {
-    const savedLang = localStorage.getItem("lang") as Language;
-    if (savedLang && (savedLang === "en" || savedLang === "ru")) {
-      setLangState(savedLang);
+    const saved = localStorage.getItem("lang") as Language;
+    if (saved && ["en", "ru", "kz"].includes(saved)) {
+      i18n.changeLanguage(saved);
+      api.defaults.headers.common["locale"] = saved === "kz" ? "ru" : saved;
     } else {
-      setLangState("ru"); // Default to Russian
+      api.defaults.headers.common["locale"] = "ru";
     }
-  }, []);
+  }, [i18n]);
 
-  // Sync Axios headers whenever language state changes
-  useEffect(() => {
-    api.defaults.headers.common['locale'] = lang;
-  }, [lang]);
-
-  const setLang = (newLang: Language) => {
-    setLangState(newLang);
-    localStorage.setItem("lang", newLang);
-  };
+  const setLang = useCallback(
+    (newLang: Language) => {
+      i18n.changeLanguage(newLang);
+      localStorage.setItem("lang", newLang);
+      api.defaults.headers.common["locale"] = newLang === "kz" ? "ru" : newLang;
+    },
+    [i18n]
+  );
 
   return (
-    <LanguageContext.Provider value={{ lang, t: dictionaries[lang], setLang }}>
+    <LanguageContext.Provider value={{ lang, t, setLang }}>
       {children}
     </LanguageContext.Provider>
   );

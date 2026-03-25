@@ -26,17 +26,17 @@ export default function Register() {
   return (
     <div className="flex w-full min-h-[calc(100vh-73px)]">
       <div className="w-full md:w-1/2 flex items-center justify-center p-8 bg-white dark:bg-slate-950">
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           className="max-w-md w-full space-y-8"
         >
           <div className="space-y-2">
             <h2 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">
-              {t.auth.create}
+              {t("auth.create")}
             </h2>
             <p className="text-slate-500 dark:text-slate-400">
-              {t.auth.create_desc}
+              {t("auth.create_desc")}
             </p>
           </div>
 
@@ -46,7 +46,7 @@ export default function Register() {
                 <UserIcon className="absolute left-3 top-3 h-5 w-5 text-slate-400" />
                 <Input
                   type="text"
-                  placeholder={t.auth.name}
+                  placeholder={t("auth.name")}
                   className="pl-10 h-12 bg-slate-50 dark:bg-slate-900"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
@@ -57,7 +57,7 @@ export default function Register() {
                 <Mail className="absolute left-3 top-3 h-5 w-5 text-slate-400" />
                 <Input
                   type="email"
-                  placeholder={t.auth.email}
+                  placeholder={t("auth.email")}
                   className="pl-10 h-12 bg-slate-50 dark:bg-slate-900"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
@@ -68,7 +68,7 @@ export default function Register() {
                 <Lock className="absolute left-3 top-3 h-5 w-5 text-slate-400" />
                 <Input
                   type="password"
-                  placeholder={t.auth.password}
+                  placeholder={t("auth.password")}
                   className="pl-10 h-12 bg-slate-50 dark:bg-slate-900"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
@@ -78,13 +78,13 @@ export default function Register() {
             </div>
 
             <Button type="submit" className="w-full h-12 bg-blue-600 hover:bg-blue-700 text-white font-medium shadow-md">
-              {t.auth.signup}
+              {t("auth.signup")}
             </Button>
 
             <p className="text-center text-sm text-slate-600 dark:text-slate-400 mt-6">
-              {t.auth.have_account}{" "}
+              {t("auth.have_account")}{" "}
               <Link href="/login" className="text-blue-600 hover:underline font-medium">
-                {t.auth.signin}
+                {t("auth.signin")}
               </Link>
             </p>
           </form>
@@ -93,7 +93,7 @@ export default function Register() {
 
       <div className="hidden md:flex w-1/2 bg-slate-50 dark:bg-slate-900 items-center justify-center p-12 border-l border-slate-200 dark:border-slate-800 relative overflow-hidden">
         <div className="absolute inset-0 bg-blue-600/5 mix-blend-multiply" />
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.2 }}

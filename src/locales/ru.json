@@ -23,7 +23,12 @@
     "safe": "Безопасно",
     "suspicious": "Подозрительно",
     "malicious": "Опасно",
-    "confidence": "Уверенность модели:"
+    "confidence": "Уверенность модели:",
+    "result_breakdown": "Детализация рисков по компонентам",
+    "score_html": "Анализ контента (Модель А)",
+    "score_url": "Структура адреса (Модель Б)",
+    "score_reputation": "Доверие домену (WHOIS/Возраст)",
+    "score_protocol": "Протокол защиты (SSL)"
   },
   "auth": {
     "welcome": "С возвращением",
@@ -45,6 +50,8 @@
     "phishing_detected": "Обнаружено Фишинга",
     "safe_urls": "Безопасных URL",
     "model_a": "Модель A",
-    "model_b": "Модель B"
+    "model_b": "Модель B",
+    "model_usage": "Использование Моделей",
+    "dataset_distribution": "Распределение Тренировочных Данных (2026)"
   }
 }

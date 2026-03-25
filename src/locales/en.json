@@ -23,7 +23,12 @@
     "safe": "Safe",
     "suspicious": "Suspicious",
     "malicious": "Malicious",
-    "confidence": "Model Confidence:"
+    "confidence": "Model Confidence:",
+    "result_breakdown": "Risk Breakdown by Component",
+    "score_html": "Content Analysis (Model A)",
+    "score_url": "URL Structure (Model B)",
+    "score_reputation": "Domain Trust (WHOIS/Age)",
+    "score_protocol": "Security Protocol (SSL)"
   },
   "auth": {
     "welcome": "Welcome back",
@@ -45,6 +50,8 @@
     "phishing_detected": "Phishing Detected",
     "safe_urls": "Safe URLs",
     "model_a": "Model A Scans",
-    "model_b": "Model B Scans"
+    "model_b": "Model B Scans",
+    "model_usage": "Model Usage Distribution",
+    "dataset_distribution": "Training Dataset Distribution (2026)"
   }
 }

@@ -22,7 +22,7 @@ const pieData = [
 const COLORS = ['#ef4444', '#10b981'];
 
 export default function Dashboard() {
-  const { t, lang } = useLanguage();
+  const { t } = useLanguage();
   const { isAuthenticated, user } = useAuth();
   const router = useRouter();
 
@@ -36,18 +36,18 @@ export default function Dashboard() {
 
   return (
     <div className="w-full max-w-7xl mx-auto px-4 md:px-8 py-8 space-y-8">
-      
+
       {/* Header */}
       <div>
-        <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-2">{t.dashboard.title}</h2>
-        <p className="text-slate-500 dark:text-slate-400">{t.dashboard.subtitle} Welcome, {user?.name}.</p>
+        <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-2">{t("dashboard.title")}</h2>
+        <p className="text-slate-500 dark:text-slate-400">{t("dashboard.subtitle")} Welcome, {user?.name}.</p>
       </div>
 
       {/* Top Stat Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <Card className="shadow-sm">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-slate-500">{t.dashboard.total_scans}</CardTitle>
+            <CardTitle className="text-sm font-medium text-slate-500">{t("dashboard.total_scans")}</CardTitle>
             <Database className="w-4 h-4 text-blue-500" />
           </CardHeader>
           <CardContent>
@@ -57,7 +57,7 @@ export default function Dashboard() {
         </Card>
         <Card className="shadow-sm">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-slate-500">{t.dashboard.phishing_detected}</CardTitle>
+            <CardTitle className="text-sm font-medium text-slate-500">{t("dashboard.phishing_detected")}</CardTitle>
             <AlertTriangle className="w-4 h-4 text-red-500" />
           </CardHeader>
           <CardContent>
@@ -67,7 +67,7 @@ export default function Dashboard() {
         </Card>
         <Card className="shadow-sm">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-slate-500">{t.dashboard.safe_urls}</CardTitle>
+            <CardTitle className="text-sm font-medium text-slate-500">{t("dashboard.safe_urls")}</CardTitle>
             <Shield className="w-4 h-4 text-emerald-500" />
           </CardHeader>
           <CardContent>
@@ -79,13 +79,13 @@ export default function Dashboard() {
 
       {/* Charts Section */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        
+
         {/* Bar Chart: Model Performance */}
         <Card className="shadow-sm border-slate-200 dark:border-slate-800">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-lg">
               <Activity className="w-5 h-5 text-indigo-500" />
-              {lang === 'ru' ? 'Использование Моделей' : 'Model Usage Distribution'}
+              {t("dashboard.model_usage")}
             </CardTitle>
           </CardHeader>
           <CardContent className="h-[300px]">
@@ -106,7 +106,7 @@ export default function Dashboard() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-lg">
               <Database className="w-5 h-5 text-blue-500" />
-              {lang === 'ru' ? 'Распределение Тренировочных Данных (2026)' : 'Training Dataset Distribution (2026)'}
+              {t("dashboard.dataset_distribution")}
             </CardTitle>
           </CardHeader>
           <CardContent className="h-[300px] flex items-center justify-center">
@@ -129,7 +129,7 @@ export default function Dashboard() {
                 <Tooltip />
               </PieChart>
             </ResponsiveContainer>
-            
+
             {/* Custom Legend */}
             <div className="absolute right-8 top-24 space-y-3">
               {pieData.map((entry, idx) => (
