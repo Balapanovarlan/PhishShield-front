@@ -1,11 +1,15 @@
 "use client";
 
-import { Activity, CheckCircle2, Info, ChevronRight, XCircle, AlertTriangle } from "lucide-react";
+import { useState } from "react";
+import { Activity, CheckCircle2, Info, ChevronRight, XCircle, AlertTriangle, Flag } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { motion } from "framer-motion";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from "@/lib/LanguageContext";
 import { ScanResult } from "@/types";
+import api from "@/lib/api";
 
 interface ScanResultCardProps {
   result: ScanResult;
@@ -14,6 +18,12 @@ interface ScanResultCardProps {
 
 export function ScanResultCard({ result, scannedUrl }: ScanResultCardProps) {
   const { t } = useLanguage();
+  const [showAppeal, setShowAppeal] = useState(false);
+  const [appealName, setAppealName] = useState("");
+  const [appealEmail, setAppealEmail] = useState("");
+  const [appealReason, setAppealReason] = useState("");
+  const [appealLoading, setAppealLoading] = useState(false);
+  const [appealSent, setAppealSent] = useState(false);
 
   return (
     <motion.div
@@ -168,6 +178,105 @@ export function ScanResultCard({ result, scannedUrl }: ScanResultCardProps) {
               {t("result.confidence")} {Math.round(result.confidence * 100)}%
             </div>
           </div>
+
+          {/* Report False Positive */}
+          {result.status === "Phishing" && (
+            <div className="pt-2">
+              {appealSent ? (
+                <div className="bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-300 text-sm px-4 py-3 rounded-lg border border-emerald-200 dark:border-emerald-800">
+                  {t("appeal.success")}
+                </div>
+              ) : (
+                <>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setShowAppeal(!showAppeal)}
+                    className="text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 gap-2"
+                  >
+                    <Flag className="w-4 h-4" />
+                    {t("appeal.report_btn")}
+                  </Button>
+
+                  <AnimatePresence>
+                    {showAppeal && (
+                      <motion.div
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: "auto" }}
+                        exit={{ opacity: 0, height: 0 }}
+                        className="overflow-hidden"
+                      >
+                        <div className="mt-4 p-5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl space-y-4">
+                          <div>
+                            <h4 className="font-semibold text-slate-800 dark:text-white mb-1">{t("appeal.title")}</h4>
+                            <p className="text-sm text-slate-500">{t("appeal.desc")}</p>
+                          </div>
+                          <form
+                            onSubmit={async (e) => {
+                              e.preventDefault();
+                              setAppealLoading(true);
+                              try {
+                                await api.post("/appeals", {
+                                  url: scannedUrl.startsWith("http") ? scannedUrl : `http://${scannedUrl}`,
+                                  contact_name: appealName,
+                                  contact_email: appealEmail,
+                                  reason: appealReason,
+                                });
+                                setAppealSent(true);
+                              } finally {
+                                setAppealLoading(false);
+                              }
+                            }}
+                            className="space-y-3"
+                          >
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                              <Input
+                                placeholder={t("appeal.your_name")}
+                                value={appealName}
+                                onChange={(e) => setAppealName(e.target.value)}
+                                required
+                                className="h-10 bg-white dark:bg-slate-950"
+                              />
+                              <Input
+                                type="email"
+                                placeholder={t("appeal.your_email")}
+                                value={appealEmail}
+                                onChange={(e) => setAppealEmail(e.target.value)}
+                                required
+                                className="h-10 bg-white dark:bg-slate-950"
+                              />
+                            </div>
+                            <textarea
+                              placeholder={t("appeal.reason_placeholder")}
+                              value={appealReason}
+                              onChange={(e) => setAppealReason(e.target.value)}
+                              required
+                              rows={3}
+                              className="w-full px-3 py-2 text-sm rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+                            />
+                            <Button
+                              type="submit"
+                              disabled={appealLoading}
+                              className="h-9 bg-blue-600 hover:bg-blue-700 text-white text-sm"
+                            >
+                              {appealLoading ? (
+                                <span className="flex items-center gap-2">
+                                  <span className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                                  {t("appeal.submitting")}
+                                </span>
+                              ) : (
+                                t("appeal.submit")
+                              )}
+                            </Button>
+                          </form>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </>
+              )}
+            </div>
+          )}
         </div>
       </Card>
     </motion.div>

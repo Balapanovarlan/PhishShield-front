@@ -35,6 +35,9 @@ export function Navbar() {
             <Link href="/admin/users" className={`hover:text-blue-600 transition-colors ${pathname === '/admin/users' ? 'text-blue-600 font-semibold' : ''}`}>
               {t('admin.users')}
             </Link>
+            <Link href="/admin/appeals" className={`hover:text-blue-600 transition-colors ${pathname === '/admin/appeals' ? 'text-blue-600 font-semibold' : ''}`}>
+              {t('admin.appeals')}
+            </Link>
           </>
         )}
         
